@@ -1,35 +1,17 @@
 package epruhlo.socialmultiplication.domain;
 
-public class Multiplication {
+import lombok.*;
 
-    private int factorA;
-    private int factorB;
-    private int result;
+@RequiredArgsConstructor
+@Getter
+@ToString
+@EqualsAndHashCode
+public final class Multiplication {
 
-    public Multiplication(int factorA, int factorB) {
-        this.factorA = factorA;
-        this.factorB = factorB;
-        this.result = factorA * factorB;
-    }
+    private final int factorA;
+    private final int factorB;
 
-    public int getFactorA() {
-        return factorA;
-    }
-
-    public int getFactorB() {
-        return factorB;
-    }
-
-    public int getResult() {
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Multiplication{" +
-                "factorA=" + factorA +
-                ", factorB=" + factorB +
-                ", result(A*B)=" + result +
-                '}';
+    public Multiplication() {
+        this(0, 0);
     }
 }
