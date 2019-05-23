@@ -1,7 +1,10 @@
 package epruhlo.socialmultiplication.service;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Random;
 
+@Service
 public class RandomGeneratorServiceImpl implements RandomGeneratorService {
 
     private static final int MINIMUM_FACTOR = 11;
