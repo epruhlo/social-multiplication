@@ -3,6 +3,8 @@ package epruhlo.socialmultiplication.service;
 import epruhlo.socialmultiplication.domain.Multiplication;
 import epruhlo.socialmultiplication.domain.MultiplicationResultAttempt;
 import epruhlo.socialmultiplication.domain.User;
+import epruhlo.socialmultiplication.event.EventDispatcher;
+import epruhlo.socialmultiplication.event.MultiplicationSolvedEvent;
 import epruhlo.socialmultiplication.repository.MultiplicationRepository;
 import epruhlo.socialmultiplication.repository.MultiplicationResultAttemptRepository;
 import epruhlo.socialmultiplication.repository.UserRepository;
@@ -18,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 public class MultiplicationServiceImplTest {
@@ -36,10 +39,13 @@ public class MultiplicationServiceImplTest {
     @Mock
     private MultiplicationRepository multiplicationRepository;
 
+    @Mock
+    private EventDispatcher eventDispatcher;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        multiplicationServiceImpl = new MultiplicationServiceImpl(randomGeneratorService, attemptRepository, userRepository, multiplicationRepository);
+        multiplicationServiceImpl = new MultiplicationServiceImpl(randomGeneratorService, attemptRepository, userRepository, multiplicationRepository, eventDispatcher);
     }
 
     @Test
@@ -68,6 +74,7 @@ public class MultiplicationServiceImplTest {
         //then
         assertThat(attemptResult).isTrue();
         verify(attemptRepository).save(verifiedAttempt);
+        verify(eventDispatcher).send(eq(new MultiplicationSolvedEvent(verifiedAttempt.getId(), verifiedAttempt.getUser().getId(), true)));
     }
 
     @Test
@@ -85,6 +92,7 @@ public class MultiplicationServiceImplTest {
         //then
         assertThat(attemptResult).isFalse();
         verify(attemptRepository).save(attempt);
+        verify(eventDispatcher).send(eq(new MultiplicationSolvedEvent(attempt.getId(), attempt.getUser().getId(), false)));
     }
 
     @Test
